@@ -1,0 +1,9 @@
+*.iml
+*.class
+.gradle
+/local.properties
+.idea
+.DS_Store
+/build
+/captures
+GeneratedPluginRegistrant.java
