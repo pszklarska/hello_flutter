@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "889900788871",
+    "firebase_url": "https://flutterfriendlychat-fc8a8.firebaseio.com",
+    "project_id": "flutterfriendlychat-fc8a8",
+    "storage_bucket": "flutterfriendlychat-fc8a8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:889900788871:android:7056dfc104ce5cba",
+        "android_client_info": {
+          "package_name": "pl.droidsonroids.helloflutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "889900788871-ri44q6qgmc2u30b0eotqorthr2tqc1mr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAiMT7XbBnFI1Dw05WoU8X_3AG1apkVwAg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -45,5 +45,17 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>CFBundleURLTypes</key>
+      <array>
+          <dict>
+             <key>CFBundleTypeRole</key>
+             <string>Editor</string>
+             <key>CFBundleURLSchemes</key>
+             <array>
+             <string>com.googleusercontent.apps.889900788871-cas5lsfom462tpgig9oojilst1ak66sm</string>
+             <string>pl.droidsonroids.helloFlutter</string>
+             </array>
+          </dict>
+      </array>
 </dict>
 </plist>
