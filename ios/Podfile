@@ -27,7 +27,7 @@ def parse_KV_file(file,seperator='=')
 end
 
 target 'Runner' do
-  use_frameworks!
+  # use_frameworks!
   # Flutter Pods
   generated_xcode_build_settings = parse_KV_file("./Flutter/Generated.xcconfig")
   if generated_xcode_build_settings.empty?

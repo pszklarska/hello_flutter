@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 
 final googleSignIn = new GoogleSignIn();
-
 final analytics = new FirebaseAnalytics();
+final auth = FirebaseAuth.instance;
 
 final ThemeData kIOSTheme = new ThemeData(
     primarySwatch: Colors.orange,
@@ -144,6 +145,13 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     if (user == null) {
       user = await googleSignIn.signIn();
       analytics.logLogin();
+    }
+
+    if (await auth.currentUser() == null) {
+      GoogleSignInAuthentication credentials =
+          await googleSignIn.currentUser.authentication;
+      await auth.signInWithGoogle(
+          idToken: credentials.idToken, accessToken: credentials.accessToken);
     }
   }
 
