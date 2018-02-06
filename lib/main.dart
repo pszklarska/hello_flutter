@@ -9,17 +9,11 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 
 import 'dart:async';
 
+import 'package:hello_flutter/themes.dart';
+
 final googleSignIn = new GoogleSignIn();
 final analytics = new FirebaseAnalytics();
 final auth = FirebaseAuth.instance;
-
-final ThemeData kIOSTheme = new ThemeData(
-    primarySwatch: Colors.orange,
-    primaryColor: Colors.grey[100],
-    primaryColorBrightness: Brightness.light);
-
-final ThemeData kDefaultTheme = new ThemeData(
-    primaryColor: Colors.purple, accentColor: Colors.orangeAccent[400]);
 
 void main() {
   runApp(new FriendlyChatApp());
@@ -31,8 +25,8 @@ class FriendlyChatApp extends StatelessWidget {
     return new MaterialApp(
         title: "FriendlyChat",
         theme: defaultTargetPlatform == TargetPlatform.iOS
-            ? kIOSTheme
-            : kDefaultTheme,
+            ? Themes.kIOSTheme
+            : Themes.kDefaultTheme,
         home: new ChatScreen());
   }
 }
@@ -44,6 +38,8 @@ class ChatScreen extends StatefulWidget {
 
 class ChatScreenState extends State<ChatScreen> {
   final TextEditingController _textController = new TextEditingController();
+  final reference = FirebaseDatabase.instance.reference().child("messages");
+
   bool _isComposing = false;
 
   @override
@@ -51,22 +47,12 @@ class ChatScreenState extends State<ChatScreen> {
     return new Scaffold(
         appBar: new AppBar(
             title: new Text("FriendlyChat"),
-            elevation:
-                Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0),
+            elevation: Themes.getElevation(context)),
         body: new Container(
           child: new Column(
             children: <Widget>[
               new Flexible(
-                child: new FirebaseAnimatedList(
-                    query: reference,
-                    sort: (a, b) => b.key.compareTo(a.key),
-                    padding: new EdgeInsets.all(8.0),
-                    reverse: true,
-                    itemBuilder: (_, DataSnapshot snapshot,
-                        Animation<double> animation) {
-                      return new ChatMessage(
-                          snapshot: snapshot, animation: animation);
-                    }),
+                child: buildFirebaseList(),
               ),
               new Divider(height: 1.0),
               new Container(
@@ -84,6 +70,17 @@ class ChatScreenState extends State<ChatScreen> {
         ));
   }
 
+  FirebaseAnimatedList buildFirebaseList() {
+    return new FirebaseAnimatedList(
+        query: reference,
+        sort: (a, b) => b.key.compareTo(a.key),
+        padding: new EdgeInsets.all(8.0),
+        reverse: true,
+        itemBuilder: (_, DataSnapshot snapshot, Animation<double> animation) {
+          return new ChatMessage(snapshot: snapshot, animation: animation);
+        });
+  }
+
   Widget _buildTextComposer() {
     return new IconTheme(
       data: new IconThemeData(color: Theme.of(context).accentColor),
@@ -91,26 +88,33 @@ class ChatScreenState extends State<ChatScreen> {
           margin: const EdgeInsets.symmetric(horizontal: 8.0),
           child: new Row(children: <Widget>[
             new Flexible(
-              child: new TextField(
-                controller: _textController,
-                onSubmitted: _isComposing ? _handleSubmitted : null,
-                onChanged: _handleChanged,
-                decoration:
-                    new InputDecoration.collapsed(hintText: "Send a message"),
-              ),
+              child: buildSendTextField(),
             ),
             new Container(
               margin: new EdgeInsets.symmetric(horizontal: 4.0),
-              child: Theme.of(context).platform == TargetPlatform.iOS
-                  ? new CupertinoButton(
-                      child: new Text("Send"),
-                      onPressed: () => _handleSubmitted(_textController.text))
-                  : new IconButton(
-                      icon: new Icon(Icons.send),
-                      onPressed: () => _handleSubmitted(_textController.text)),
+              child: buildSendButton(),
             ),
           ])),
     );
+  }
+
+  TextField buildSendTextField() {
+    return new TextField(
+      controller: _textController,
+      onSubmitted: _isComposing ? _handleSubmitted : null,
+      onChanged: _handleChanged,
+      decoration: new InputDecoration.collapsed(hintText: "Send a message"),
+    );
+  }
+
+  Widget buildSendButton() {
+    return Theme.of(context).platform == TargetPlatform.iOS
+        ? new CupertinoButton(
+            child: new Text("Send"),
+            onPressed: () => _handleSubmitted(_textController.text))
+        : new IconButton(
+            icon: new Icon(Icons.send),
+            onPressed: () => _handleSubmitted(_textController.text));
   }
 
   Future<Null> _handleSubmitted(String text) async {
@@ -156,9 +160,6 @@ class ChatScreenState extends State<ChatScreen> {
           idToken: credentials.idToken, accessToken: credentials.accessToken);
     }
   }
-
-  final reference = FirebaseDatabase.instance.reference().child("messages");
-
 }
 
 class ChatMessage extends StatelessWidget {
@@ -175,31 +176,46 @@ class ChatMessage extends StatelessWidget {
         axisAlignment: 0.0,
         child: new Container(
           margin: const EdgeInsets.symmetric(vertical: 10.0),
-          child: new Row(
+          child: buildMessageRow(context),
+        ));
+  }
+
+  Row buildMessageRow(BuildContext context) {
+    return new Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        new Container(
+          margin: const EdgeInsets.only(right: 16.0),
+          child: buildAvatar(),
+        ),
+        new Expanded(
+          child: new Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              new Container(
-                margin: const EdgeInsets.only(right: 16.0),
-                child: new CircleAvatar(
-                  backgroundImage:
-                      new NetworkImage(snapshot.value['senderPhotoUrl']),
-                ),
-              ),
-              new Expanded(
-                child: new Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    new Text(snapshot.value['senderName'],
-                        style: Theme.of(context).textTheme.subhead),
-                    new Container(
-                      margin: const EdgeInsets.only(top: 5.0),
-                      child: new Text(snapshot.value['text']),
-                    )
-                  ],
-                ),
-              )
+              buildSenderNameText(context),
+              buildMessageText()
             ],
           ),
-        ));
+        )
+      ],
+    );
+  }
+
+  CircleAvatar buildAvatar() {
+    return new CircleAvatar(
+      backgroundImage: new NetworkImage(snapshot.value['senderPhotoUrl']),
+    );
+  }
+
+  Text buildSenderNameText(BuildContext context) {
+    return new Text(snapshot.value['senderName'],
+        style: Theme.of(context).textTheme.subhead);
+  }
+
+  Container buildMessageText() {
+    return new Container(
+      margin: const EdgeInsets.only(top: 5.0),
+      child: new Text(snapshot.value['text']),
+    );
   }
 }
