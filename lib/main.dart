@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -6,7 +7,10 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:image_picker/image_picker.dart';
 
+import 'dart:math';
+import 'dart:io';
 import 'dart:async';
 
 import 'package:hello_flutter/themes.dart';
@@ -87,6 +91,10 @@ class ChatScreenState extends State<ChatScreen> {
       child: new Container(
           margin: const EdgeInsets.symmetric(horizontal: 8.0),
           child: new Row(children: <Widget>[
+            new Container(
+              margin: new EdgeInsets.symmetric(horizontal: 4.0),
+              child: buildTakePhotoButton(),
+            ),
             new Flexible(
               child: buildSendTextField(),
             ),
@@ -96,6 +104,12 @@ class ChatScreenState extends State<ChatScreen> {
             ),
           ])),
     );
+  }
+
+  Widget buildTakePhotoButton() {
+    return new IconButton(
+        icon: new Icon(Icons.photo_camera),
+        onPressed: onTakePhotoButtonPressed);
   }
 
   TextField buildSendTextField() {
@@ -117,6 +131,22 @@ class ChatScreenState extends State<ChatScreen> {
             onPressed: () => _handleSubmitted(_textController.text));
   }
 
+  Future onTakePhotoButtonPressed() async {
+    await _ensureLoggedIn();
+    File imageFile = await ImagePicker.pickImage();
+    String imageFileName = createImageFileName();
+    Uri downloadUrl = await uploadPhoto(imageFileName, imageFile);
+    _sendMessage(imageUrl: downloadUrl.toString());
+  }
+
+  Future<Uri> uploadPhoto(String imageFileName, File imageFile) async {
+    StorageReference reference =
+        FirebaseStorage.instance.ref().child(imageFileName);
+    StorageUploadTask uploadTask = reference.put(imageFile);
+    Uri downloadUrl = (await uploadTask.future).downloadUrl;
+    return downloadUrl;
+  }
+
   Future<Null> _handleSubmitted(String text) async {
     if (_isComposing) {
       _textController.clear();
@@ -124,13 +154,14 @@ class ChatScreenState extends State<ChatScreen> {
         _isComposing = false;
       });
       await _ensureLoggedIn();
-      _sendMessage(text);
+      _sendMessage(text: text);
     }
   }
 
-  void _sendMessage(String text) {
+  void _sendMessage({String text, String imageUrl}) {
     reference.push().set({
       'text': text,
+      'imageUrl': imageUrl,
       'senderName': googleSignIn.currentUser.displayName,
       'senderPhotoUrl': googleSignIn.currentUser.photoUrl
     });
@@ -159,6 +190,11 @@ class ChatScreenState extends State<ChatScreen> {
       await auth.signInWithGoogle(
           idToken: credentials.idToken, accessToken: credentials.accessToken);
     }
+  }
+
+  String createImageFileName() {
+    int random = new Random().nextInt(100000);
+    return "image_$random.jpg";
   }
 }
 
@@ -193,7 +229,7 @@ class ChatMessage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               buildSenderNameText(context),
-              buildMessageText()
+              buildMessageBody()
             ],
           ),
         )
@@ -212,10 +248,17 @@ class ChatMessage extends StatelessWidget {
         style: Theme.of(context).textTheme.subhead);
   }
 
-  Container buildMessageText() {
+  Container buildMessageBody() {
     return new Container(
       margin: const EdgeInsets.only(top: 5.0),
-      child: new Text(snapshot.value['text']),
+      child: snapshot.value['imageUrl'] != null
+          ? buildMessagePhoto()
+          : buildMessageText(),
     );
   }
+
+  Text buildMessageText() => new Text(snapshot.value['text']);
+
+  Widget buildMessagePhoto() =>
+      new Image.network(snapshot.value['imageUrl'], width: 250.0);
 }
