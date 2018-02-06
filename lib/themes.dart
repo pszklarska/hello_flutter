@@ -9,7 +9,9 @@ class Themes {
   static final ThemeData kDefaultTheme = new ThemeData(
       primaryColor: Colors.purple, accentColor: Colors.orangeAccent[400]);
 
+  static double getElevation(BuildContext context) =>
+      isiOS(context) ? 0.0 : 4.0;
 
-  static double getElevation(BuildContext context) => Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0;
-
+  static bool isiOS(BuildContext context) =>
+      Theme.of(context).platform == TargetPlatform.iOS;
 }

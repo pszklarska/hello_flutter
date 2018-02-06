@@ -7,6 +7,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:hello_flutter/constants.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'dart:math';
@@ -27,7 +28,7 @@ class FriendlyChatApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-        title: "FriendlyChat",
+        title: Constants.APP_NAME,
         theme: defaultTargetPlatform == TargetPlatform.iOS
             ? Themes.kIOSTheme
             : Themes.kDefaultTheme,
@@ -42,7 +43,8 @@ class ChatScreen extends StatefulWidget {
 
 class ChatScreenState extends State<ChatScreen> {
   final TextEditingController _textController = new TextEditingController();
-  final reference = FirebaseDatabase.instance.reference().child("messages");
+  final reference =
+      FirebaseDatabase.instance.reference().child(Constants.MESSAGES_TABLE);
 
   bool _isComposing = false;
 
@@ -50,7 +52,7 @@ class ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(
-            title: new Text("FriendlyChat"),
+            title: new Text(Constants.APP_NAME),
             elevation: Themes.getElevation(context)),
         body: new Container(
           child: new Column(
@@ -66,7 +68,7 @@ class ChatScreenState extends State<ChatScreen> {
               ),
             ],
           ),
-          decoration: Theme.of(context).platform == TargetPlatform.iOS
+          decoration: Themes.isiOS(context)
               ? new BoxDecoration(
                   border:
                       new Border(top: new BorderSide(color: Colors.grey[200])))
@@ -115,20 +117,20 @@ class ChatScreenState extends State<ChatScreen> {
   TextField buildSendTextField() {
     return new TextField(
       controller: _textController,
-      onSubmitted: _isComposing ? _handleSubmitted : null,
+      onSubmitted: _isComposing ? _onSendMessageButtonPressed : null,
       onChanged: _handleChanged,
       decoration: new InputDecoration.collapsed(hintText: "Send a message"),
     );
   }
 
   Widget buildSendButton() {
-    return Theme.of(context).platform == TargetPlatform.iOS
+    return Themes.isiOS(context)
         ? new CupertinoButton(
             child: new Text("Send"),
-            onPressed: () => _handleSubmitted(_textController.text))
+            onPressed: () => _onSendMessageButtonPressed(_textController.text))
         : new IconButton(
             icon: new Icon(Icons.send),
-            onPressed: () => _handleSubmitted(_textController.text));
+            onPressed: () => _onSendMessageButtonPressed(_textController.text));
   }
 
   Future onTakePhotoButtonPressed() async {
@@ -147,7 +149,7 @@ class ChatScreenState extends State<ChatScreen> {
     return downloadUrl;
   }
 
-  Future<Null> _handleSubmitted(String text) async {
+  Future<Null> _onSendMessageButtonPressed(String text) async {
     if (_isComposing) {
       _textController.clear();
       setState(() {
