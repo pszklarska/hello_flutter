@@ -1,7 +1,6 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -29,9 +28,7 @@ class FriendlyChatApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
         title: Constants.APP_NAME,
-        theme: defaultTargetPlatform == TargetPlatform.iOS
-            ? Themes.kIOSTheme
-            : Themes.kDefaultTheme,
+        theme: Themes.getTheme(context),
         home: new ChatScreen());
   }
 }
@@ -127,7 +124,7 @@ class ChatScreenState extends State<ChatScreen> {
   Widget buildSendButton() {
     return Themes.isiOS(context)
         ? new CupertinoButton(
-            child: new Text(Constants.SEND_),
+            child: new Text(Constants.SEND),
             onPressed: () => _onSendMessageButtonPressed(_textController.text))
         : new IconButton(
             icon: new Icon(Icons.send),

@@ -58,7 +58,7 @@ PODS:
   - google_sign_in (0.0.1):
     - Flutter
     - GoogleSignIn (~> 4.0)
-  - GoogleSignIn (4.1.2):
+  - GoogleSignIn (4.1.1):
     - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
     - GoogleToolboxForMac/NSString+URLArguments (~> 2.1)
     - GTMOAuth2 (~> 1.0)
@@ -84,29 +84,29 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
-  - firebase_analytics (from `/Users/paulina/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-0.0.4/ios`)
-  - firebase_auth (from `/Users/paulina/.pub-cache/hosted/pub.dartlang.org/firebase_auth-0.2.0/ios`)
-  - firebase_database (from `/Users/paulina/.pub-cache/hosted/pub.dartlang.org/firebase_database-0.0.12/ios`)
-  - firebase_storage (from `/Users/paulina/.pub-cache/hosted/pub.dartlang.org/firebase_storage-0.0.5/ios`)
-  - Flutter (from `/Users/paulina/Flutter/bin/cache/artifacts/engine/ios`)
-  - google_sign_in (from `/Users/paulina/.pub-cache/hosted/pub.dartlang.org/google_sign_in-0.3.1/ios`)
-  - image_picker (from `/Users/paulina/.pub-cache/hosted/pub.dartlang.org/image_picker-0.1.1/ios`)
+  - firebase_analytics (from `/Users/paulinaszklarska/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-0.0.4/ios`)
+  - firebase_auth (from `/Users/paulinaszklarska/.pub-cache/hosted/pub.dartlang.org/firebase_auth-0.2.0/ios`)
+  - firebase_database (from `/Users/paulinaszklarska/.pub-cache/hosted/pub.dartlang.org/firebase_database-0.0.12/ios`)
+  - firebase_storage (from `/Users/paulinaszklarska/.pub-cache/hosted/pub.dartlang.org/firebase_storage-0.0.5/ios`)
+  - Flutter (from `/Users/paulinaszklarska/Develop/flutter/bin/cache/artifacts/engine/ios-release`)
+  - google_sign_in (from `/Users/paulinaszklarska/.pub-cache/hosted/pub.dartlang.org/google_sign_in-0.3.1/ios`)
+  - image_picker (from `/Users/paulinaszklarska/.pub-cache/hosted/pub.dartlang.org/image_picker-0.1.1/ios`)
 
 EXTERNAL SOURCES:
   firebase_analytics:
-    :path: /Users/paulina/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-0.0.4/ios
+    :path: /Users/paulinaszklarska/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-0.0.4/ios
   firebase_auth:
-    :path: /Users/paulina/.pub-cache/hosted/pub.dartlang.org/firebase_auth-0.2.0/ios
+    :path: /Users/paulinaszklarska/.pub-cache/hosted/pub.dartlang.org/firebase_auth-0.2.0/ios
   firebase_database:
-    :path: /Users/paulina/.pub-cache/hosted/pub.dartlang.org/firebase_database-0.0.12/ios
+    :path: /Users/paulinaszklarska/.pub-cache/hosted/pub.dartlang.org/firebase_database-0.0.12/ios
   firebase_storage:
-    :path: /Users/paulina/.pub-cache/hosted/pub.dartlang.org/firebase_storage-0.0.5/ios
+    :path: /Users/paulinaszklarska/.pub-cache/hosted/pub.dartlang.org/firebase_storage-0.0.5/ios
   Flutter:
-    :path: /Users/paulina/Flutter/bin/cache/artifacts/engine/ios
+    :path: /Users/paulinaszklarska/Develop/flutter/bin/cache/artifacts/engine/ios-release
   google_sign_in:
-    :path: /Users/paulina/.pub-cache/hosted/pub.dartlang.org/google_sign_in-0.3.1/ios
+    :path: /Users/paulinaszklarska/.pub-cache/hosted/pub.dartlang.org/google_sign_in-0.3.1/ios
   image_picker:
-    :path: /Users/paulina/.pub-cache/hosted/pub.dartlang.org/image_picker-0.1.1/ios
+    :path: /Users/paulinaszklarska/.pub-cache/hosted/pub.dartlang.org/image_picker-0.1.1/ios
 
 SPEC CHECKSUMS:
   Firebase: 4b66b5b59c43edac745b87f0c87e42cdd0279c13
@@ -124,7 +124,7 @@ SPEC CHECKSUMS:
   Flutter: 7eb41cd1fd524b90d7f22bceb20da2c39338b089
   Google: 98da4b1a60ed0beb80a290387a28333406a1eb90
   google_sign_in: 4efa54380d5ef07e98a58fb24c8a7f9c51867222
-  GoogleSignIn: d9ef55b10f0aa401a5de2747f59b725e4b9732ac
+  GoogleSignIn: 3fdaa34a2ba04dbd7a25d7db39aecb0da98d5bdc
   GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
   GTMOAuth2: c77fe325e4acd453837e72d91e3b5f13116857b2
   GTMSessionFetcher: 5bb1eae636127de695590f50e7d248483eb891e6
