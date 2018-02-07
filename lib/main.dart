@@ -119,14 +119,15 @@ class ChatScreenState extends State<ChatScreen> {
       controller: _textController,
       onSubmitted: _isComposing ? _onSendMessageButtonPressed : null,
       onChanged: _handleChanged,
-      decoration: new InputDecoration.collapsed(hintText: "Send a message"),
+      decoration:
+          new InputDecoration.collapsed(hintText: Constants.SEND_MESSAGE_HINT),
     );
   }
 
   Widget buildSendButton() {
     return Themes.isiOS(context)
         ? new CupertinoButton(
-            child: new Text("Send"),
+            child: new Text(Constants.SEND_),
             onPressed: () => _onSendMessageButtonPressed(_textController.text))
         : new IconButton(
             icon: new Icon(Icons.send),
@@ -162,12 +163,12 @@ class ChatScreenState extends State<ChatScreen> {
 
   void _sendMessage({String text, String imageUrl}) {
     reference.push().set({
-      'text': text,
-      'imageUrl': imageUrl,
-      'senderName': googleSignIn.currentUser.displayName,
-      'senderPhotoUrl': googleSignIn.currentUser.photoUrl
+      Message.TEXT: text,
+      Message.IMAGE_URL: imageUrl,
+      Message.SENDER_NAME: googleSignIn.currentUser.displayName,
+      Message.SENDER_PHOTO_URL: googleSignIn.currentUser.photoUrl
     });
-    analytics.logEvent(name: "send_message");
+    analytics.logEvent(name: Analytics.SEND_MESSAGE_EVENT);
   }
 
   void _handleChanged(String text) {
@@ -241,26 +242,27 @@ class ChatMessage extends StatelessWidget {
 
   CircleAvatar buildAvatar() {
     return new CircleAvatar(
-      backgroundImage: new NetworkImage(snapshot.value['senderPhotoUrl']),
+      backgroundImage:
+          new NetworkImage(snapshot.value[Message.SENDER_PHOTO_URL]),
     );
   }
 
   Text buildSenderNameText(BuildContext context) {
-    return new Text(snapshot.value['senderName'],
+    return new Text(snapshot.value[Message.SENDER_NAME],
         style: Theme.of(context).textTheme.subhead);
   }
 
   Container buildMessageBody() {
     return new Container(
       margin: const EdgeInsets.only(top: 5.0),
-      child: snapshot.value['imageUrl'] != null
+      child: snapshot.value[Message.IMAGE_URL] != null
           ? buildMessagePhoto()
           : buildMessageText(),
     );
   }
 
-  Text buildMessageText() => new Text(snapshot.value['text']);
+  Text buildMessageText() => new Text(snapshot.value[Message.TEXT]);
 
   Widget buildMessagePhoto() =>
-      new Image.network(snapshot.value['imageUrl'], width: 250.0);
+      new Image.network(snapshot.value[Message.IMAGE_URL], width: 250.0);
 }
